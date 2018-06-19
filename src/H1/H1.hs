@@ -1,12 +1,9 @@
-module H1
-  ( someFunc, toDigits, toDigitsRev, doubleEveryOther, sumDigits, validate, hanoi
+module H1.H1
+  ( toDigits, toDigitsRev, doubleEveryOther, sumDigits, validate, hanoi
     ) where
 
 import Data.List
 import Data.Bool
-
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
 
 toDigits :: Integer -> [Integer]
 toDigits = reverse . toDigitsRev

@@ -1,6 +1,6 @@
 module Main where
 
-import H1
+import H1.H1
 
 main :: IO ()
-main = hanoi 5 "a" "b" "c"
+main = print $ hanoi 5 "a" "b" "c"
