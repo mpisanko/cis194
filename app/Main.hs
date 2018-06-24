@@ -1,6 +1,7 @@
 module Main where
 
-import H1.H1
+import H2.LogAnalysis
 
 main :: IO ()
-main = print $ hanoi 5 "a" "b" "c"
+main = someFunc
+-- main = print $ hanoi 5 "a" "b" "c"
