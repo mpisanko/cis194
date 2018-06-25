@@ -1,6 +1,6 @@
 module H2.Log where
 
--- import Control.Applicative
+import Control.Applicative
 
 data MessageType = Info
                  | Warning
@@ -12,6 +12,10 @@ type Timestamp = Int
 data LogMessage = LogMessage MessageType Timestamp String
                 | Unknown String
                 deriving (Show, Eq)
+
+data MessageTree = Leaf
+                 | Node MessageTree LogMessage MessageTree
+                 deriving (Show, Eq)
 
 -- | @testParse p n f@ tests the log file parser @p@ by running it
 --   on the first @n@ lines of file @f@.

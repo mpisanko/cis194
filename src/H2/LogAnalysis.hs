@@ -17,7 +17,7 @@ parseMessageType string = case words string of
   (['E'] : code : remainder) -> Just (Error (read code), unwords remainder)
   (['W'] : remainder) -> Just (Warning, unwords remainder)
   (['I'] : remainder) -> Just (Info, unwords remainder)
-  _ -> Nothing
+  remainder -> (Unknown remainder, "")
 
 parseTime :: Parser Int
 parseTime string = case words string of
@@ -34,6 +34,11 @@ someFunc :: IO ()
 someFunc = do
   print $ parseLogMessage "E 12 123 abs ederf"
   print $ parseLogMessage "I 123 abs ederf"
--- parse :: String -> [LogMessage]
+
+parse :: String -> [LogMessage]
+parse input = map messageOrNothing $ map parseLogMessage $ lines input
+  where
+    messageOrNothing (Just (m, "")) = m
+    messageOrNothing _ = Nothing
 
 
