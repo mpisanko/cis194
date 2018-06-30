@@ -38,10 +38,10 @@ parseLogMessage string = case validMessage string of
 insert :: LogMessage -> MessageTree -> MessageTree
 insert (Unknown _) tree = tree
 insert m Leaf = Node Leaf m Leaf
-insert m@(LogMessage _ ts _) t@(Node left m'@(LogMessage _ tsr _) right)
-  | ts == tsr = t
-  | ts < tsr = (Node  (insert m left) m' right)
-  | ts > tsr = (Node left m' (insert m right))
+insert m t@(Node left m' right)
+  | m == m' = t
+  | m < m'  = (Node  (insert m left) m' right)
+  | m > m' = (Node left m' (insert m right))
 
 build :: [LogMessage] -> MessageTree
 build logs = addLogs logs Leaf
@@ -49,14 +49,19 @@ build logs = addLogs logs Leaf
     addLogs [] tree = tree
     addLogs (x : xs) tree = addLogs xs (insert x tree)
 
+parse :: String -> [LogMessage]
+parse input = map (fst . fromJust) $ map parseLogMessage $ lines input
+
+inOrder :: MessageTree -> [LogMessage]
+inOrder Leaf = []
+inOrder (Node left m right) =
+  inOrder left ++ [m] ++ inOrder right
+
 someFunc :: IO ()
 someFunc = do
   print $ parse "E 12 123 abc def ghi\nI 321 qwe rty uio\nW 456 mb vcx z\nnothing at all"
   -- print $ parseLogMessage "E 12 123 abs ederf"
   -- print $ parseLogMessage "I 123 abs ederf"
   -- print $ parseLogMessage "gibberish abs ederf"
-
-parse :: String -> [LogMessage]
-parse input = map (fst . fromJust) $ map parseLogMessage $ lines input
 
 

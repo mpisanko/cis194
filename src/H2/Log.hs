@@ -13,6 +13,9 @@ data LogMessage = LogMessage MessageType Timestamp String
                 | Unknown String
                 deriving (Show, Eq)
 
+instance Ord LogMessage where
+  compare (LogMessage _ t _) (LogMessage _ t' _) = compare t t'
+
 data MessageTree = Leaf
                  | Node MessageTree LogMessage MessageTree
                  deriving (Show, Eq)
