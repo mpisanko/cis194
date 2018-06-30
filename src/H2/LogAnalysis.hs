@@ -1,8 +1,9 @@
 {-# OPTIONS_GHC -Wall #-}
-module H2.LogAnalysis where
+module LogAnalysis where
 
-import H2.Log
+import Log
 import Data.Maybe (fromJust)
+import Data.List (sort)
 
 parseMessage :: String -> LogMessage
 parseMessage string = go $ words string
@@ -57,6 +58,12 @@ inOrder Leaf = []
 inOrder (Node left m right) =
   inOrder left ++ [m] ++ inOrder right
 
+whatWentWrong :: [LogMessage] -> [String]
+whatWentWrong msgs =
+  (map (\(LogMessage _ _ s) -> s) . sort . filter severe) $ msgs
+  where
+    severe (LogMessage (Error l) _ _) = l >= 50
+    severe _ = False
 someFunc :: IO ()
 someFunc = do
   print $ parse "E 12 123 abc def ghi\nI 321 qwe rty uio\nW 456 mb vcx z\nnothing at all"

@@ -1,4 +1,4 @@
-module H2.Log where
+module Log where
 
 import Control.Applicative
 
