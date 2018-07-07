@@ -1,5 +1,10 @@
 module Tree.Tree where
 
+import Data.Bool
+import Data.List
+
+import Data.Map
+
 data BinaryTree a =
     Leaf
   | Node (BinaryTree a) a (BinaryTree a)
@@ -45,3 +50,26 @@ someFunc = do
   print $ inorder sample
   print $ postorder sample
   print $ foldTree (+) 0 sample
+
+
+myIterate :: (a -> a) -> a -> [a]
+myIterate f x = x : myIterate f (f x)
+
+myUnfoldr :: (b -> Maybe (a, b)) -> b -> [a]
+myUnfoldr f x = case f x of
+  Just (y, x') -> y : myUnfoldr f x'
+  Nothing      -> []
+
+m :: [Integer] -> [Integer]
+m (x : y : z : []) = bool [] [y] (y > x && y > z)
+m _ = []
+
+localMaxima :: [Integer] -> [Integer]
+localMaxima xs@(_:y:zs) = concatMap m $ transpose [xs, y : zs, zs]
+localMaxima _ = []
+-- localMaxima xs = concatMap m $ map (\i -> (take 3 (drop i xs))) [0 .. length xs]
+
+hm :: [Integer] -> Map Integer Integer
+hm = foldr (\i m -> alter ((+1).Just) i m) (fromList (zip [0..9] (repeat 0)))
+-- histogram :: [Integer] -> String
+-- histogram xs = foldr
