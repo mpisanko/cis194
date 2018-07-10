@@ -19,6 +19,6 @@ localMaxima _ = []
 hm :: [Integer] -> [(Integer, Int)]
 hm xs = toList $ foldr (update (Just.(+1))) (fromList (zip [0..9] (repeat 0))) xs
 toString :: [(Integer, Int)] -> [String]
-toString ms = map (\(i,n)-> reverse $ (show i) ++ "=" ++ (take n (repeat '*')) ++ (take ((maximum (map snd ms)) - n) (repeat ' '))) ms
+toString ms = map (\(i,n)-> (take ((maximum (map snd ms)) - n) (repeat ' ')) ++ (take n (repeat '*')) ++ "=" ++ show i) ms
 histogram :: [Integer] -> String
 histogram xs = (foldr (\i j-> i ++ "\n" ++ j) []) . transpose . toString . hm $ xs
