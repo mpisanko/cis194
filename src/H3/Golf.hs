@@ -2,23 +2,20 @@ module Golf where
 
 import Data.List
 import Data.Bool
-import Data.Map.Strict (update, fromList, toList)
+import Data.Map.Strict as Map (adjust, fromList, assocs, elems, Map)
+import Control.Arrow
 
 skips :: [a] -> [[a]]
 skips xs = map (\i -> snd <$> filter ((==0).(`mod` i).fst) (zip [1 ..] xs)) [1 .. length xs]
 
-m :: [Integer] -> [Integer]
-m (x : y : z : []) = bool [] [y] (y > x && y > z)
-m _ = []
-
 localMaxima :: [Integer] -> [Integer]
-localMaxima xs@(_:y:zs) = concatMap m $ transpose [xs, y : zs, zs]
+localMaxima xs@(_:y:zs) = concatMap (\(a,b,c) -> bool [] [b] (2 * b > a + c)) $ zip3 xs (y : zs) zs
 localMaxima _ = []
--- localMaxima xs = concatMap m $ map (\i -> (take 3 (drop i xs))) [0 .. length xs]
 
-hm :: [Integer] -> [(Integer, Int)]
-hm xs = toList $ foldr (update (Just.(+1))) (fromList (zip [0..9] (repeat 0))) xs
-toString :: [(Integer, Int)] -> [String]
-toString ms = map (\(i,n)-> (take ((maximum (map snd ms)) - n) (repeat ' ')) ++ (take n (repeat '*')) ++ "=" ++ show i) ms
+hm :: [Integer] -> (Map Integer Int)
+hm = foldr (adjust (+1)) (fromList (zip [0..9] (repeat 0)))
+-- hm = (map (head &&& length)) . group . sort
+toString :: (Map Integer Int) -> [String]
+toString m = map (\(i,n) -> (replicate ((maximum $ elems m) - n) ' ') ++ (replicate n '*') ++ "=" ++ show i) $ assocs m
 histogram :: [Integer] -> String
-histogram xs = (foldr (\i j-> i ++ "\n" ++ j) []) . transpose . toString . hm $ xs
+histogram = concatMap (++ "\n") . transpose . toString . hm
