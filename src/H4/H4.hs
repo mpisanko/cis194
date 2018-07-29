@@ -48,3 +48,15 @@ map' f = foldr (\a bs -> (((flip (:)) bs) . f) a) []
 
 myFoldl :: (a -> b -> a) -> a -> [b] -> a
 myFoldl f base xs = foldr (flip f) base (reverse xs)
+
+-- Start with a list of the integers from 1 to n. From this list, remove all numbers of the form i + j + 2ij where:
+--     i , j ∈ N ,   1 ≤ i ≤ j
+--     i + j + 2 i j ≤ n
+-- The remaining numbers are doubled and incremented by one,
+-- giving a list of the odd prime numbers (i.e., all primes except 2) below 2n + 2. 
+
+sieveSundaram :: Integer -> [Integer]
+sieveSundaram n = map ((+1) . (*2)) ([1..n] \\ eliminated n)
+  where
+    eliminated n' = [i + j + 2 * i * j | i <- [1..n' - 1]
+                                       , j <- [i..n']]
