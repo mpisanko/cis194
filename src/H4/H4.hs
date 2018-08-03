@@ -29,7 +29,7 @@ data Tree a = Leaf
 foldTree :: [a] -> Tree a
 foldTree xs = foldr insertNode Leaf xs
   where
-    maxDepth = (fromIntegral . floor . (logBase 2) . fromIntegral . length) xs
+    maxDepth = (floor . (logBase 2) . fromIntegral . length) xs
     insertNode x Leaf = Node 0 Leaf x Leaf
     insertNode x (Node d Leaf x' Leaf) = Node (d + 1) (Node d Leaf x Leaf) x' Leaf
     insertNode x (Node d Leaf x' r@(Node _ _ _ _)) = Node d (Node (d - 1) Leaf x Leaf) x' r
